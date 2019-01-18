@@ -1,0 +1,42 @@
+<idea-plugin>
+    <id>com.nvlad.tinypng-optimizer</id>
+    <name>TinyPNG Image Optimizer</name>
+    <vendor email="tinypng@nvlad.com" url="http://nvlad.com">NVlad</vendor>
+
+    <description><![CDATA[
+    Smart PNG and JPEG compression using <a href="https://tinypng.com/">TinyPNG</a> service.
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="com.nvlad.tinypng.PluginGlobalSettings"/>
+        <!-- Add your extensions here -->
+        <errorHandler implementation="com.nvlad.tinypng.diagnostic.ErrorReportHandler"/>
+        <applicationConfigurable
+                instance="com.nvlad.tinypng.ui.settings.Settings"
+                displayName="TinyPNG Image Optimize"
+                id="NVlad.TinyPNG"
+                groupId="tools"
+        />
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+        <action id="com.nvlad.tinypng.optimizer" class="com.nvlad.tinypng.actions.Compress" text="Optimize Image Size"
+                description="Optimize Image size with TinyPNG">
+            <add-to-group  group-id="ProjectViewPopupMenu" anchor="last"/>
+            <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
+        </action>
+    </actions>
+    <application-components>
+        <component>
+            <implementation-class>com.nvlad.tinypng.PluginApplicationComponent</implementation-class>
+            <interface-class>com.nvlad.tinypng.PluginApplicationComponent</interface-class>
+        </component>
+    </application-components>
+</idea-plugin>
