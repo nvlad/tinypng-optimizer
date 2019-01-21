@@ -151,7 +151,7 @@ public class ProcessImage extends JDialog {
         buttonCancel.setText("Stop");
         final List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) fileTree.getModel().getRoot());
         for (FileTreeNode node : nodes) {
-            node.setImageBufer(null);
+            node.setImageBuffer(null);
             ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
         }
 
@@ -159,7 +159,7 @@ public class ProcessImage extends JDialog {
             int index = 0;
             for (FileTreeNode node : nodes) {
                 try {
-                    node.setImageBufer(TinyPNG.process(node.getVirtualFile()));
+                    node.setImageBuffer(TinyPNG.process(node.getVirtualFile()));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -235,7 +235,7 @@ public class ProcessImage extends JDialog {
 
             ApplicationManager.getApplication().invokeLater(() -> {
                 for (FileTreeNode node : nodes) {
-                    node.setImageBufer(null);
+                    node.setImageBuffer(null);
                     ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
                 }
 

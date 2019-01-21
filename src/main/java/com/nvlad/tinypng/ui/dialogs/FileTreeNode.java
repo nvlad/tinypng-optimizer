@@ -22,7 +22,7 @@ public class FileTreeNode extends CheckedTreeNode {
         return compressedImage;
     }
 
-    public void setImageBufer(byte[] compressedImage) {
+    public void setImageBuffer(byte[] compressedImage) {
         this.compressedImage = compressedImage;
     }
 }
