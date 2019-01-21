@@ -76,15 +76,15 @@ public class ProcessImage extends JDialog {
     }
 
     public void setDialogSize(JFrame frame) {
-        this.setMinimumSize(new Dimension(frame.getWidth() / 10 * 8, frame.getHeight() / 10 * 8));
+        this.setMinimumSize(new Dimension(frame.getWidth() / 2, frame.getHeight() / 2));
         this.setLocationRelativeTo(frame);
         PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
-        if (settings.dialogLocation != null) {
-            this.setLocation(settings.dialogLocation);
+        if (settings.dialogLocationX != -1) {
+            this.setLocation(settings.dialogLocationX, settings.dialogLocationY);
         }
 
-        if (settings.dialogSize != null) {
-            this.setSize(settings.dialogSize);
+        if (settings.dialogSizeWidth != -1) {
+            this.setPreferredSize(settings.getDialogSize());
         }
 
         if  (settings.dividerLocation != -1) {
@@ -94,19 +94,18 @@ public class ProcessImage extends JDialog {
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                settings.dialogSize = ((ProcessImage) e.getSource()).getSize();
+                settings.setDialogSize(((ProcessImage) e.getSource()).getSize());
             }
 
             @Override
             public void componentMoved(ComponentEvent e) {
-                settings.dialogLocation = ((ProcessImage) e.getSource()).getLocation();
+                settings.setDialogLocation(((ProcessImage) e.getSource()).getLocation());
             }
         });
-        this.pack();
-
         splitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, evt -> {
             settings.dividerLocation = (int) evt.getNewValue();
         });
+        this.pack();
     }
 
     private void configureUI() {
