@@ -46,7 +46,7 @@ intellij {
 }
 
 group 'com.nvlad.tinypng-optimizer'
-version '1.0.1'
+version '1.0.8'
 
 patchPluginXml {
     changeNotes """
