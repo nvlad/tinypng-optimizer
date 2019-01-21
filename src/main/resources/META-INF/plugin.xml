@@ -9,10 +9,8 @@
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
-    <!-- uncomment to enable plugin in all products
     <depends>com.intellij.modules.lang</depends>
-    -->
-
+    <idea-version since-build="163"/>
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="com.nvlad.tinypng.PluginGlobalSettings"/>
         <!-- Add your extensions here -->
