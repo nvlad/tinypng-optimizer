@@ -277,8 +277,12 @@ public class ProcessImage extends JDialog {
     private void updateImage(JImage imagePanel, JLabel detailsLabel, VirtualFile file) throws IOException {
         if (file.isDirectory()) {
             imagePanel.setImage((VirtualFile) null);
+            clearTitle();
         } else {
             imagePanel.setImage(file);
+            final int width = imagePanel.getImage().getWidth(this);
+            final int height = imagePanel.getImage().getHeight(this);
+            setTitle(String.format("- %s [%dx%d]", file.getName(), width, height));
         }
 
         updateImageDetails(imagePanel, detailsLabel);
