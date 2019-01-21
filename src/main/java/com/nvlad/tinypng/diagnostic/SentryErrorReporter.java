@@ -3,6 +3,7 @@ package com.nvlad.tinypng.diagnostic;
 import com.intellij.ide.plugins.IdeaPluginDescriptor;
 import com.intellij.ide.plugins.PluginManager;
 import com.intellij.openapi.application.ApplicationInfo;
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.application.impl.ApplicationInfoImpl;
 import com.intellij.openapi.diagnostic.SubmittedReportInfo;
 import com.intellij.openapi.extensions.PluginId;
@@ -45,8 +46,7 @@ class SentryErrorReporter {
             os.put("kernel_version", SystemInfo.OS_ARCH);
 
             final Map<String, Object> runtime = new HashMap<>();
-            // TODO: Сделать подстановку нормального названия IDE
-            final String ideName = applicationInfo.getBuild().getProductCode().equals("PS") ? "PhpStorm" : "IntelliJ IDEA";
+            final String ideName = ApplicationNamesInfo.getInstance().getFullProductName();
             runtime.put("name", ideName);
             runtime.put("version", applicationInfo.getFullVersion());
 
