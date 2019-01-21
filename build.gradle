@@ -42,10 +42,9 @@ intellij {
 }
 
 group 'com.nvlad.tinypng-optimizer'
-version '1.0-SNAPSHOT'
+version '1.0'
 
 patchPluginXml {
     changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      First release"""
 }
