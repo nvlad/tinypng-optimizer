@@ -208,7 +208,7 @@ public class ProcessImage extends JDialog {
         buttonCancel.setEnabled(false);
 
         List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) fileTree.getModel().getRoot());
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+        ApplicationManager.getApplication().runWriteAction(() -> {
             for (FileTreeNode node : nodes) {
                 try {
                     OutputStream stream = node.getVirtualFile().getOutputStream(this);
