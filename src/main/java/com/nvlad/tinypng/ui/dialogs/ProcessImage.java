@@ -5,6 +5,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import com.nvlad.tinypng.PluginGlobalSettings;
 import com.nvlad.tinypng.services.TinyPNG;
 import com.nvlad.tinypng.ui.components.JImage;
 import com.nvlad.tinypng.util.StringFormatUtil;
@@ -50,9 +51,7 @@ public class ProcessImage extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonProcess);
 
-        buttonProcess.addActionListener(e -> {
-            onProcess();
-        });
+        buttonProcess.addActionListener(e -> onProcess());
 
         buttonOK.addActionListener(e -> onSave());
 
@@ -76,6 +75,39 @@ public class ProcessImage extends JDialog {
         configureUI();
     }
 
+    public void setDialogSize(JFrame frame) {
+        this.setMinimumSize(new Dimension(frame.getWidth() / 10 * 8, frame.getHeight() / 10 * 8));
+        this.setLocationRelativeTo(frame);
+        PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
+        if (settings.dialogLocation != null) {
+            this.setLocation(settings.dialogLocation);
+        }
+
+        if (settings.dialogSize != null) {
+            this.setSize(settings.dialogSize);
+        }
+
+        if  (settings.dividerLocation != -1) {
+            splitPanel.setDividerLocation(settings.dividerLocation);
+        }
+
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                settings.dialogSize = ((ProcessImage) e.getSource()).getSize();
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                settings.dialogLocation = ((ProcessImage) e.getSource()).getLocation();
+            }
+        });
+        this.pack();
+
+        splitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, evt -> {
+            settings.dividerLocation = (int) evt.getNewValue();
+        });
+    }
 
     private void configureUI() {
         splitPanel.setBackground(UIUtil.getPanelBackground());
@@ -270,7 +302,7 @@ public class ProcessImage extends JDialog {
         while (!myRoots.contains(file)) {
             file = file.getParent();
             path.addFirst(file);
-        };
+        }
 
         FileTreeNode parent = root;
         for (VirtualFile pathElement : path) {

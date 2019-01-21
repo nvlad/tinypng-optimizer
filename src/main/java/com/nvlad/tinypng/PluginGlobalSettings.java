@@ -8,12 +8,17 @@ import com.intellij.util.xmlb.XmlSerializerUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
+
 @State(name = "TinyPNG Image Optimizer", storages = @Storage(file = "$APP_CONFIG$/TinyPNG-Image-Optimizer.xml"))
 public class PluginGlobalSettings implements PersistentStateComponent<PluginGlobalSettings> {
     public String version;
     public String uuid;
     public String username;
     public String apiKey;
+    public Point dialogLocation = null;
+    public Dimension dialogSize = null;
+    public int dividerLocation = -1;
 
     @Nullable
     @Override

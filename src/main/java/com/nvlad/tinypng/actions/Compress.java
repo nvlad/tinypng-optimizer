@@ -11,11 +11,13 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ArrayUtil;
 import com.nvlad.tinypng.Icons;
+import com.nvlad.tinypng.PluginGlobalSettings;
 import com.nvlad.tinypng.ui.dialogs.ProcessImage;
+import com.tinify.Tinify;
 
 import javax.swing.*;
-import java.awt.*;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Compress extends AnAction {
@@ -45,9 +47,7 @@ public class Compress extends AnAction {
 
         final List<VirtualFile> list = getSupportedFileList(roots);
         final ProcessImage dialog = new ProcessImage(list, Arrays.asList(roots));
-        dialog.setMinimumSize(new Dimension(frame.getWidth() / 10 * 5, frame.getHeight() / 10 * 5));
-        dialog.setLocationRelativeTo(frame);
-        dialog.pack();
+        dialog.setDialogSize(frame);
         dialog.setVisible(true);
     }
 
