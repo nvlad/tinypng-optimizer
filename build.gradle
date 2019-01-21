@@ -23,7 +23,11 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'com.tinify', name: 'tinify', version: '1.6.4'
+    compile ('com.tinify:tinify:1.6.2') {
+//        exclude group: 'com.google.code.gson', module: 'gson'
+//        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+//        exclude group: 'com.squareup.okio', module: 'okio'
+    }
     compile ('io.sentry:sentry:1.7.16') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
