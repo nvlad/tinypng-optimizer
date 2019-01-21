@@ -79,16 +79,13 @@ public class ProcessImage extends JDialog {
         this.setMinimumSize(new Dimension(frame.getWidth() / 2, frame.getHeight() / 2));
         this.setLocationRelativeTo(frame);
         PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
-        if (settings.dialogLocationX != -1) {
+        splitPanel.setDividerLocation(settings.dividerLocation);
+        if (settings.dialogLocationX != 0) {
             this.setLocation(settings.dialogLocationX, settings.dialogLocationY);
         }
 
-        if (settings.dialogSizeWidth != -1) {
+        if (settings.dialogSizeWidth != 0) {
             this.setPreferredSize(settings.getDialogSize());
-        }
-
-        if  (settings.dividerLocation != -1) {
-            splitPanel.setDividerLocation(settings.dividerLocation);
         }
 
         this.addComponentListener(new ComponentAdapter() {
