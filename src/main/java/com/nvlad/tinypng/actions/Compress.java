@@ -5,6 +5,8 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ArrayUtil;
@@ -26,6 +28,19 @@ public class Compress extends AnAction {
         final JFrame frame = WindowManager.getInstance().getFrame(project);
         if (roots == null || frame == null) {
             return;
+        }
+
+        if (StringUtil.isEmptyOrSpaces(Tinify.key())) {
+            PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
+            if (StringUtil.isEmptyOrSpaces(settings.apiKey)) {
+                settings.apiKey = Messages.showInputDialog(project, "What's your TinyPNG API Key?", "API Key", Messages.getQuestionIcon());
+            }
+
+            if (StringUtil.isEmptyOrSpaces(settings.apiKey)) {
+                return;
+            }
+
+            Tinify.setKey(settings.apiKey);
         }
 
         final List<VirtualFile> list = getSupportedFileList(roots);
