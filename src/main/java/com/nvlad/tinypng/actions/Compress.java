@@ -46,7 +46,7 @@ public class Compress extends AnAction {
         }
 
         final List<VirtualFile> list = getSupportedFileList(roots);
-        final ProcessImage dialog = new ProcessImage(list, Arrays.asList(roots));
+        final ProcessImage dialog = new ProcessImage(project, list, Arrays.asList(roots));
         dialog.setDialogSize(frame);
         dialog.setVisible(true);
     }

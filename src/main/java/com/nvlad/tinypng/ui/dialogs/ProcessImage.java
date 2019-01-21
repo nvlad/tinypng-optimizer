@@ -1,6 +1,7 @@
 package com.nvlad.tinypng.ui.dialogs;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.util.ui.UIUtil;
@@ -40,12 +41,14 @@ public class ProcessImage extends JDialog {
     private JLabel totalDetails;
     private List<VirtualFile> myFiles;
     private List<VirtualFile> myRoots;
+    private Project myProject;
     private boolean imageCompressInProgress;
 
-    public ProcessImage(List<VirtualFile> files, List<VirtualFile> roots) {
+    public ProcessImage(Project project, List<VirtualFile> files, List<VirtualFile> roots) {
         imageCompressInProgress = false;
         myFiles = files;
         myRoots = roots;
+        myProject = project;
 
         setContentPane(contentPane);
         setModal(true);
@@ -259,7 +262,7 @@ public class ProcessImage extends JDialog {
         UIUtil.removeScrollBorder(scrollPanel);
         imageBefore = new JImage();
         imageAfter = new JImage();
-        fileTree = new CheckboxTree(new FileCellRenderer(), buildTree());
+        fileTree = new CheckboxTree(new FileCellRenderer(myProject), buildTree());
         fileTree.setRootVisible(false);
         fileTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         TreeUtil.expandAll(fileTree);
