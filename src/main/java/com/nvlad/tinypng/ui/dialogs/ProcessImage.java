@@ -132,9 +132,20 @@ public class ProcessImage extends JDialog {
             }
         });
         splitPanel.setBorder(null);
+        clearTitle();
+    }
+
+    @Override
+    public void setTitle(String title) {
+        super.setTitle("TinyPNG Image Optimizer" + (title == null ? "" : " " + title));
+    }
+
+    public void clearTitle() {
+        setTitle(null);
     }
 
     private void onProcess() {
+        setTitle("[0%]");
         imageCompressInProgress = true;
         buttonProcess.setEnabled(false);
         buttonCancel.setText("Stop");
@@ -145,6 +156,7 @@ public class ProcessImage extends JDialog {
         }
 
         ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            int index = 0;
             for (FileTreeNode node : nodes) {
                 try {
                     node.setImageBufer(TinyPNG.process(node.getVirtualFile()));
@@ -152,16 +164,21 @@ public class ProcessImage extends JDialog {
                     e.printStackTrace();
                 }
 
+                final float finalIndex = index;
                 ApplicationManager.getApplication().invokeLater(() -> {
                     ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
+                    this.setTitle(String.format("[%.0f%%]", finalIndex / nodes.size() * 100));
                 });
 
                 if (!imageCompressInProgress) {
                     break;
                 }
+
+                index++;
             }
 
             ApplicationManager.getApplication().invokeLater(() -> {
+                clearTitle();
                 imageCompressInProgress = false;
                 getRootPane().setDefaultButton(buttonOK);
                 buttonProcess.setEnabled(true);
