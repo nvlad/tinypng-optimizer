@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
 
-@State(name = "TinyPNG Image Optimizer", storages = @Storage(file = "$APP_CONFIG$/tinypng-image-optimizer.xml"))
+@State(name = Constants.TITLE, storages = @Storage(file = "$APP_CONFIG$/tinypng-image-optimizer.xml"))
 public class PluginGlobalSettings implements PersistentStateComponent<PluginGlobalSettings> {
     public String version;
     public String uuid;

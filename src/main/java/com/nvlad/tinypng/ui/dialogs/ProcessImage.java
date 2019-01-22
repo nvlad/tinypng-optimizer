@@ -6,6 +6,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.CheckboxTree;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
+import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
 import com.nvlad.tinypng.services.TinyPNG;
 import com.nvlad.tinypng.ui.components.JImage;
@@ -140,7 +141,7 @@ public class ProcessImage extends JDialog {
 
     @Override
     public void setTitle(String title) {
-        super.setTitle("TinyPNG Image Optimizer" + (title == null ? "" : " " + title));
+        super.setTitle(Constants.TITLE + (title == null ? "" : " " + title));
     }
 
     public void clearTitle() {

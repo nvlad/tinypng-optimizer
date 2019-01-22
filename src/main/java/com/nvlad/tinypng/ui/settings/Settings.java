@@ -2,6 +2,7 @@ package com.nvlad.tinypng.ui.settings;
 
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.util.text.StringUtil;
+import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
 import com.tinify.Tinify;
 import org.jetbrains.annotations.Nls;
@@ -17,7 +18,7 @@ public class Settings implements Configurable {
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
     public String getDisplayName() {
-        return "TinyPNG Compress";
+        return Constants.TITLE;
     }
 
     @Override

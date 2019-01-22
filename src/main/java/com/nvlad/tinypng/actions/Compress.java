@@ -10,6 +10,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.util.ArrayUtil;
+import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.Icons;
 import com.nvlad.tinypng.PluginGlobalSettings;
 import com.nvlad.tinypng.ui.dialogs.ProcessImage;
@@ -35,7 +36,7 @@ public class Compress extends AnAction {
         if (StringUtil.isEmptyOrSpaces(Tinify.key())) {
             PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
             if (StringUtil.isEmptyOrSpaces(settings.apiKey)) {
-                settings.apiKey = Messages.showInputDialog(project, "What's your TinyPNG API Key?", "API Key", Messages.getQuestionIcon());
+                settings.apiKey = Messages.showInputDialog(project, Constants.API_KEY_QUESTION, Constants.TITLE, Messages.getQuestionIcon());
             }
 
             if (StringUtil.isEmptyOrSpaces(settings.apiKey)) {
