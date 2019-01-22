@@ -46,9 +46,10 @@ intellij {
 }
 
 group 'com.nvlad.tinypng-optimizer'
-version '1.0.8'
+version '1.0.9'
 
 patchPluginXml {
     changeNotes """
-      First release"""
+      - Update "Usage this month" value on Open plugin settings or press Apply
+      """
 }

@@ -1,9 +1,13 @@
 package com.nvlad.tinypng.ui.settings;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
 import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
+import com.tinify.Exception;
 import com.tinify.Tinify;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
@@ -31,9 +35,11 @@ public class Settings implements Configurable {
     public JComponent createComponent() {
         PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
         if (!StringUtil.isEmptyOrSpaces(settings.apiKey)) {
-            Tinify.setKey(settings.apiKey);
+            if (StringUtil.isEmptyOrSpaces(Tinify.key())) {
+                Tinify.setKey(settings.apiKey);
+            }
 
-            updateUsageCount();
+            updateUsageCount(false);
         }
 
         return mainPanel;
@@ -53,9 +59,11 @@ public class Settings implements Configurable {
     public void apply() {
         PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
         settings.apiKey = apiKey.getText();
-
+        Tinify.setKey(settings.apiKey);
         if (!StringUtil.isEmptyOrSpaces(settings.apiKey)) {
-            updateUsageCount();
+            updateUsageCount(true);
+        } else {
+            usage.setText(Constants.SETTINGS_USAGE_EMPTY);
         }
     }
 
@@ -65,7 +73,22 @@ public class Settings implements Configurable {
         apiKey.setText(settings.apiKey);
     }
 
-    private void updateUsageCount() {
-        usage.setText("Usage this month: " + Tinify.compressionCount());
+    private void updateUsageCount(boolean showErrorDialog) {
+        ApplicationManager.getApplication().executeOnPooledThread(() -> {
+            try {
+                if (Tinify.validate()) {
+                    usage.setText(Constants.SETTINGS_USAGE + Tinify.compressionCount());
+                } else {
+                    usage.setText(Constants.SETTINGS_USAGE_EMPTY);
+                }
+            } catch (Exception e) {
+                ApplicationManager.getApplication().invokeLater(() -> {
+                    usage.setText(Constants.SETTINGS_USAGE_EMPTY);
+                    if (showErrorDialog) {
+                        Messages.showErrorDialog(e.getMessage(), Constants.TITLE);
+                    }
+                }, ModalityState.stateForComponent(mainPanel));
+            }
+        });
     }
 }

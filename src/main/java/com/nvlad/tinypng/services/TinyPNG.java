@@ -8,8 +8,6 @@ import com.tinify.Tinify;
 import java.io.IOException;
 
 public class TinyPNG {
-    private boolean imageProcessed = false;
-
     public static byte[] process(VirtualFile file) throws IOException {
         if (StringUtil.isEmptyOrSpaces(Tinify.key())) {
             PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
@@ -17,13 +15,5 @@ public class TinyPNG {
         }
 
         return Tinify.fromFile(file.getPath()).toBuffer();
-    }
-
-    public boolean isImageProcessed() {
-        return imageProcessed;
-    }
-
-    public int getCompressionCount() {
-        return Tinify.compressionCount();
     }
 }
