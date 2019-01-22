@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public class PluginApplicationComponent implements ApplicationComponent {
-    public static final PluginId PLUGIN_ID = PluginId.getId("com.nvlad.tinypng");
+    public static final PluginId PLUGIN_ID = PluginId.getId("com.nvlad.tinypng-optimizer");
 
     @Override
     public void initComponent() {
@@ -49,7 +49,7 @@ public class PluginApplicationComponent implements ApplicationComponent {
     @NotNull
     @Override
     public String getComponentName() {
-        return "TinyPNG PluginApplicationComponent";
+        return "TinyPNGPluginApplicationComponent";
     }
 
     public static PluginApplicationComponent getInstance() {
