@@ -20,7 +20,7 @@ Installation
 Donate
 ------
 Please make donations to support plugin development.  
-[![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=MVG9CP6NZV856)
+[![paypal](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AKLHYP4R2WES6&source=url)
 [![yandex.money](https://img.shields.io/badge/Donate-Yandex.Money-yellow.svg)](https://money.yandex.ru/to/41001209655503)  
 
 Contributing
