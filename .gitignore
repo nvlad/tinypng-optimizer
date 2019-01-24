@@ -1,4 +1,7 @@
-/.gradle/
-/build/
-/out/
 /.idea/
+/.gradle/
+/buildSrc/.gradle/
+/build/
+/buildSrc/build/
+/out/
+local.properties
