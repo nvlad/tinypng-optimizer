@@ -1,6 +1,9 @@
 package com.nvlad.tinypng.actions;
 
-import com.intellij.openapi.actionSystem.*;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
+import com.intellij.openapi.actionSystem.Presentation;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
@@ -18,10 +21,10 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Compress extends AnAction {
+public class CompressDialogAction extends AnAction {
     private static final String[] supportedExtensions = {"png", "jpg", "jpeg"};
 
-    public Compress() {
+    public CompressDialogAction() {
         getTemplatePresentation().setIcon(Icons.ACTION);
     }
 

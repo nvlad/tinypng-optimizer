@@ -25,7 +25,7 @@
 
     <actions>
         <!-- Add your actions here -->
-        <action id="com.nvlad.tinypng.optimizer" class="com.nvlad.tinypng.actions.Compress" text="Optimize Image Size..."
+        <action id="com.nvlad.tinypng.optimizer" class="com.nvlad.tinypng.actions.CompressDialogAction" text="Optimize Image Size..."
                 description="Optimize Image size with TinyPNG">
             <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
         </action>
