@@ -4,6 +4,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.CheckboxTree;
+import com.intellij.ui.JBColor;
 import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.nvlad.tinypng.Constants;
@@ -164,6 +165,8 @@ public class ProcessImage extends JDialog {
 
         System.out.println("hohohoh");
         System.out.println("sdklfjlskdjflskd");
+        titleBefore.setForeground(JBColor.green.darker());
+        titleAfter.setForeground(JBColor.red.darker());
     }
 
     @Override
