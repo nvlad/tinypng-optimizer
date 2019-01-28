@@ -24,6 +24,10 @@ import java.util.List;
 public class Compress extends AnAction {
     private static final String[] supportedExtensions = {"png", "jpg", "jpeg"};
 
+    public Compress() {
+        getTemplatePresentation().setIcon(Icons.ACTION);
+    }
+
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
