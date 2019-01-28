@@ -11,6 +11,7 @@ buildscript {
 
 plugins {
     id 'java'
+    id 'com.nvlad.sentry'
     id 'org.jetbrains.intellij' version '0.4.1'
 }
 
@@ -31,6 +32,17 @@ dependencies {
     compile ('io.sentry:sentry:1.7.16') {
         exclude group: 'org.slf4j', module: 'slf4j-api'
         exclude group: 'com.fasterxml.jackson.core', module: 'jackson-core'
+    }
+}
+
+sentry {
+//    auth.token = "hohoho!"
+//    defaults.url = "https://sentry.nvlad.com/"
+//    defaults.org = "nvlad"
+//    defaults.project = rootProject.name
+
+    defaults {
+        url = "HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH"
     }
 }
 
