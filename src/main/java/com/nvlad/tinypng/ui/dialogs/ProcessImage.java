@@ -10,6 +10,7 @@ import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
 import com.nvlad.tinypng.services.TinyPNG;
 import com.nvlad.tinypng.ui.components.JImage;
+import com.nvlad.tinypng.ui.dialogs.listeners.ImageSelectListener;
 import com.nvlad.tinypng.util.StringFormatUtil;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +22,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
@@ -44,8 +47,10 @@ public class ProcessImage extends JDialog {
     private List<VirtualFile> myRoots;
     private Project myProject;
     private boolean imageCompressInProgress;
+    private final JDialog dialog;
 
     public ProcessImage(Project project, List<VirtualFile> files, List<VirtualFile> roots) {
+        dialog = this;
         imageCompressInProgress = false;
         myFiles = files;
         myRoots = roots;
@@ -55,11 +60,26 @@ public class ProcessImage extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonProcess);
 
-        buttonProcess.addActionListener(e -> onProcess());
+        buttonProcess.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onProcess();
+            }
+        });
 
-        buttonOK.addActionListener(e -> onSave());
+        buttonOK.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSave();
+            }
+        });
 
-        buttonCancel.addActionListener(e -> onCancel());
+        buttonCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onCancel();
+            }
+        });
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -71,6 +91,7 @@ public class ProcessImage extends JDialog {
 
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
@@ -103,8 +124,11 @@ public class ProcessImage extends JDialog {
                 settings.setDialogLocation(((ProcessImage) e.getSource()).getLocation());
             }
         });
-        splitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, evt -> {
-            settings.dividerLocation = (int) evt.getNewValue();
+        splitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                settings.dividerLocation = (int) evt.getNewValue();
+            }
         });
         this.pack();
     }
@@ -137,6 +161,9 @@ public class ProcessImage extends JDialog {
         });
         splitPanel.setBorder(null);
         clearTitle();
+
+        System.out.println("hohohoh");
+        System.out.println("sdklfjlskdjflskd");
     }
 
     @Override
@@ -149,103 +176,122 @@ public class ProcessImage extends JDialog {
     }
 
     private void onProcess() {
-        setTitle("[0%]");
-        imageCompressInProgress = true;
-        buttonProcess.setEnabled(false);
-        buttonCancel.setText("Stop");
-        final List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) fileTree.getModel().getRoot());
-        for (FileTreeNode node : nodes) {
-            node.setImageBuffer(null);
-            ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
-        }
-
-        ApplicationManager.getApplication().executeOnPooledThread(() -> {
-            int index = 0;
-            for (FileTreeNode node : nodes) {
-                try {
-                    node.setImageBuffer(TinyPNG.process(node.getVirtualFile()));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                final float finalIndex = index;
-                ApplicationManager.getApplication().invokeLater(() -> {
-                    ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
-                    this.setTitle(String.format("[%.0f%%]", finalIndex / nodes.size() * 100));
-                });
-
-                if (!imageCompressInProgress) {
-                    break;
-                }
-
-                index++;
-            }
-
-            ApplicationManager.getApplication().invokeLater(() -> {
-                clearTitle();
-                imageCompressInProgress = false;
-                getRootPane().setDefaultButton(buttonOK);
-                buttonProcess.setEnabled(true);
-                buttonOK.setEnabled(true);
-                buttonCancel.setText("Cancel");
-
-                long totalBytes = 0;
-                long totalSavedBytes = 0;
-                for (FileTreeNode node : nodes) {
-                    totalBytes += node.getVirtualFile().getLength();
-                    totalSavedBytes += node.getVirtualFile().getLength() - node.getImageBuffer().length;
-                }
-
-                float compress = (((float) totalSavedBytes) * 100 / ((float) totalBytes));
-                String saved = StringFormatUtil.humanReadableByteCount(totalSavedBytes);
-                totalDetails.setText(String.format("Total compress: %.1f%% / Saved: %s", compress, saved));
-            });
-        });
+//        setTitle("[0%]");
+//        imageCompressInProgress = true;
+//        buttonProcess.setEnabled(false);
+//        buttonCancel.setText("Stop");
+//        final List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) fileTree.getModel().getRoot());
+//        for (FileTreeNode node : nodes) {
+//            node.setImageBuffer(null);
+//            ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
+//        }
+//
+//        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                int index = 0;
+//                for (FileTreeNode node : nodes) {
+//                    try {
+//                        node.setImageBuffer(TinyPNG.process(node.getVirtualFile()));
+////                } catch (Exception e) {
+////                    System.out.println(e);
+//                    } catch (IOException e) {
+//
+//                        e.printStackTrace();
+//                    }
+//
+//                    final float finalIndex = index;
+//                    ApplicationManager.getApplication().invokeLater(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
+//                            dialog.setTitle(String.format("[%.0f%%]", finalIndex / nodes.size() * 100));
+//                        }
+//                    });
+//
+//                    if (!imageCompressInProgress) {
+//                        break;
+//                    }
+//
+//                    index++;
+//                }
+//
+//                ApplicationManager.getApplication().invokeLater(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        clearTitle();
+//                        imageCompressInProgress = false;
+//                        getRootPane().setDefaultButton(buttonOK);
+//                        buttonProcess.setEnabled(true);
+//                        buttonOK.setEnabled(true);
+//                        buttonCancel.setText("Cancel");
+//
+//                        long totalBytes = 0;
+//                        long totalSavedBytes = 0;
+//                        for (FileTreeNode node : nodes) {
+//                            totalBytes += node.getVirtualFile().getLength();
+//                            totalSavedBytes += node.getVirtualFile().getLength() - node.getImageBuffer().length;
+//                        }
+//
+//                        float compress = (((float) totalSavedBytes) * 100 / ((float) totalBytes));
+//                        String saved = StringFormatUtil.humanReadableByteCount(totalSavedBytes);
+//                        totalDetails.setText(String.format("Total compress: %.1f%% / Saved: %s", compress, saved));
+//                    }
+//                });
+//
+//            }
+//        });
     }
-
-    private List<FileTreeNode> getCheckedNodes(FileTreeNode root) {
-        List<FileTreeNode> nodes = new LinkedList<>();
-        Enumeration enumeration = root.children();
-        while (enumeration.hasMoreElements()) {
-            FileTreeNode node = (FileTreeNode) enumeration.nextElement();
-            if (!node.isLeaf()) {
-                nodes.addAll(getCheckedNodes(node));
-                continue;
-            }
-
-            if (node.isChecked()) {
-                nodes.add(node);
-            }
-        }
-
-        return nodes;
-    }
+//
+//    private List<FileTreeNode> getCheckedNodes(FileTreeNode root) {
+//        List<FileTreeNode> nodes = new LinkedList<>();
+//        Enumeration enumeration = root.children();
+//        while (enumeration.hasMoreElements()) {
+//            FileTreeNode node = (FileTreeNode) enumeration.nextElement();
+//            if (!node.isLeaf()) {
+//                nodes.addAll(getCheckedNodes(node));
+//                continue;
+//            }
+//
+//            if (node.isChecked()) {
+//                nodes.add(node);
+//            }
+//        }
+//
+//        return nodes;
+//    }
 
     private void onSave() {
         buttonOK.setEnabled(false);
         buttonCancel.setEnabled(false);
 
         List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) fileTree.getModel().getRoot());
-        ApplicationManager.getApplication().runWriteAction(() -> {
-            for (FileTreeNode node : nodes) {
-                try {
-                    OutputStream stream = node.getVirtualFile().getOutputStream(this);
-                    stream.write(node.getImageBuffer());
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            ApplicationManager.getApplication().invokeLater(() -> {
+        ApplicationManager.getApplication().runWriteAction(new Runnable() {
+            @Override
+            public void run() {
                 for (FileTreeNode node : nodes) {
-                    node.setImageBuffer(null);
-                    ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
+                    try {
+                        OutputStream stream = node.getVirtualFile().getOutputStream(this);
+                        stream.write(node.getImageBuffer());
+                        stream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                buttonCancel.setText("Close");
-                buttonCancel.setEnabled(true);
-            });
+                ApplicationManager.getApplication().invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (FileTreeNode node : nodes) {
+                            node.setImageBuffer(null);
+                            ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
+                        }
+
+                        buttonCancel.setText("Close");
+                        buttonCancel.setEnabled(true);
+                    }
+                });
+            }
         });
     }
 
@@ -267,42 +313,11 @@ public class ProcessImage extends JDialog {
         fileTree.setRootVisible(false);
         fileTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         TreeUtil.expandAll(fileTree);
-        fileTree.addTreeSelectionListener(e -> {
-            FileTreeNode node = (FileTreeNode) fileTree.getLastSelectedPathComponent();
-            try {
-                updateImage((JImage) imageBefore, detailsBefore, node.getVirtualFile());
-                updateImage((JImage) imageAfter, detailsAfter, node.getImageBuffer());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        });
-    }
 
-    private void updateImage(JImage imagePanel, JLabel detailsLabel, VirtualFile file) throws IOException {
-        if (file.isDirectory()) {
-            imagePanel.setImage((VirtualFile) null);
-            clearTitle();
-        } else {
-            imagePanel.setImage(file);
-            final int width = imagePanel.getImage().getWidth(this);
-            final int height = imagePanel.getImage().getHeight(this);
-            setTitle(String.format("- %s [%dx%d]", file.getName(), width, height));
-        }
-
-        updateImageDetails(imagePanel, detailsLabel);
-    }
-
-    private void updateImage(JImage imagePanel, JLabel detailsLabel, byte[] buffer) throws IOException {
-        imagePanel.setImage(buffer);
-        updateImageDetails(imagePanel, detailsLabel);
-    }
-
-    private void updateImageDetails(JImage imagePanel, JLabel detailsLabel) {
-        if (imagePanel.getImage() == null) {
-            detailsLabel.setText("Size: ---");
-        } else {
-            detailsLabel.setText(String.format("Size: %s", StringFormatUtil.humanReadableByteCount(imagePanel.getImageSize())));
-        }
+        ImageSelectListener imageSelectListener = new ImageSelectListener(this, fileTree);
+        imageSelectListener.setBeforeComponents((JImage) imageBefore, detailsBefore);
+        imageSelectListener.setAfterComponents((JImage) imageAfter, detailsAfter);
+        fileTree.addTreeSelectionListener(imageSelectListener);
     }
 
     private FileTreeNode buildTree() {
