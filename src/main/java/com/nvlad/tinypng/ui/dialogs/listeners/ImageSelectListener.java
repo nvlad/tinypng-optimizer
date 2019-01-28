@@ -13,37 +13,21 @@ import java.io.IOException;
 
 public class ImageSelectListener implements TreeSelectionListener {
     private final ProcessImage myDialog;
-    private final JTree myTree;
-    private JImage imageBefore;
-    private JLabel detailsBefore;
-    private JImage imageAfter;
-    private JLabel detailsAfter;
 
-    public ImageSelectListener(ProcessImage dialog, JTree tree) {
+    public ImageSelectListener(ProcessImage dialog) {
         myDialog = dialog;
-        myTree = tree;
     }
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {
-        FileTreeNode node = (FileTreeNode) myTree.getLastSelectedPathComponent();
+        FileTreeNode node = (FileTreeNode) myDialog.getTree().getLastSelectedPathComponent();
         try {
-            updateImage(imageBefore, detailsBefore, node.getVirtualFile());
-            updateImage(imageAfter, detailsAfter, node.getImageBuffer());
+            updateImage(myDialog.getImageBefore(), myDialog.getDetailsBefore(), node.getVirtualFile());
+            updateImage(myDialog.getImageAfter(), myDialog.getDetailsAfter(), node.getImageBuffer());
         } catch (IOException e1) {
             e1.printStackTrace();
         }
 
-    }
-
-    public void setBeforeComponents(JImage image, JLabel label) {
-        imageBefore = image;
-        detailsBefore = label;
-    }
-
-    public void setAfterComponents(JImage image, JLabel label) {
-        imageAfter = image;
-        detailsAfter = label;
     }
 
     private void updateImage(JImage imagePanel, JLabel detailsLabel, VirtualFile file) throws IOException {
@@ -57,19 +41,19 @@ public class ImageSelectListener implements TreeSelectionListener {
             myDialog.setTitle(String.format("- %s [%dx%d]", file.getName(), width, height));
         }
 
-        updateImageDetails(imagePanel, detailsLabel);
+        updateImageDetails(imagePanel, detailsLabel, "Old");
     }
 
     private void updateImage(JImage imagePanel, JLabel detailsLabel, byte[] buffer) throws IOException {
         imagePanel.setImage(buffer);
-        updateImageDetails(imagePanel, detailsLabel);
+        updateImageDetails(imagePanel, detailsLabel, "New");
     }
 
-    private void updateImageDetails(JImage imagePanel, JLabel detailsLabel) {
+    private void updateImageDetails(JImage imagePanel, JLabel detailsLabel, String prefix) {
         if (imagePanel.getImage() == null) {
-            detailsLabel.setText("Size: ---");
+            detailsLabel.setText(prefix + " Size: ---");
         } else {
-            detailsLabel.setText(String.format("Size: %s", StringFormatUtil.humanReadableByteCount(imagePanel.getImageSize())));
+            detailsLabel.setText(String.format(prefix + " Size: %s", StringFormatUtil.humanReadableByteCount(imagePanel.getImageSize())));
         }
     }
 }

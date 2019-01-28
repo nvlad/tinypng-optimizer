@@ -1,6 +1,5 @@
 package com.nvlad.tinypng.ui.dialogs;
 
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.CheckboxTree;
@@ -9,31 +8,29 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
-import com.nvlad.tinypng.services.TinyPNG;
 import com.nvlad.tinypng.ui.components.JImage;
+import com.nvlad.tinypng.ui.dialogs.listeners.CancelActionListener;
 import com.nvlad.tinypng.ui.dialogs.listeners.ImageSelectListener;
-import com.nvlad.tinypng.util.StringFormatUtil;
+import com.nvlad.tinypng.ui.dialogs.listeners.ProcessActionListener;
+import com.nvlad.tinypng.ui.dialogs.listeners.SaveActionListener;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ProcessImage extends JDialog {
     private JPanel contentPane;
-    private JButton buttonOK;
+    private JButton buttonSave;
     private JButton buttonCancel;
     private JPanel imageBefore;
     private JLabel detailsBefore;
@@ -44,14 +41,14 @@ public class ProcessImage extends JDialog {
     private JSplitPane splitPanel;
     private JButton buttonProcess;
     private JLabel totalDetails;
+    private JLabel titleBefore;
+    private JLabel titleAfter;
     private List<VirtualFile> myFiles;
     private List<VirtualFile> myRoots;
     private Project myProject;
     private boolean imageCompressInProgress;
-    private final JDialog dialog;
 
     public ProcessImage(Project project, List<VirtualFile> files, List<VirtualFile> roots) {
-        dialog = this;
         imageCompressInProgress = false;
         myFiles = files;
         myRoots = roots;
@@ -61,42 +58,22 @@ public class ProcessImage extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonProcess);
 
-        buttonProcess.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onProcess();
-            }
-        });
+        buttonProcess.addActionListener(new ProcessActionListener(this));
+        buttonSave.addActionListener(new SaveActionListener(this));
 
-        buttonOK.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onSave();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
+        final CancelActionListener cancelActionListener = new CancelActionListener(this);
+        buttonCancel.addActionListener(cancelActionListener);
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                onClose();
             }
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(cancelActionListener, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         configureUI();
     }
@@ -163,8 +140,6 @@ public class ProcessImage extends JDialog {
         splitPanel.setBorder(null);
         clearTitle();
 
-        System.out.println("hohohoh");
-        System.out.println("sdklfjlskdjflskd");
         titleBefore.setForeground(JBColor.green.darker());
         titleAfter.setForeground(JBColor.red.darker());
     }
@@ -178,133 +153,52 @@ public class ProcessImage extends JDialog {
         setTitle(null);
     }
 
-    private void onProcess() {
-//        setTitle("[0%]");
-//        imageCompressInProgress = true;
-//        buttonProcess.setEnabled(false);
-//        buttonCancel.setText("Stop");
-//        final List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) fileTree.getModel().getRoot());
-//        for (FileTreeNode node : nodes) {
-//            node.setImageBuffer(null);
-//            ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
-//        }
-//
-//        ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                int index = 0;
-//                for (FileTreeNode node : nodes) {
-//                    try {
-//                        node.setImageBuffer(TinyPNG.process(node.getVirtualFile()));
-////                } catch (Exception e) {
-////                    System.out.println(e);
-//                    } catch (IOException e) {
-//
-//                        e.printStackTrace();
-//                    }
-//
-//                    final float finalIndex = index;
-//                    ApplicationManager.getApplication().invokeLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
-//                            dialog.setTitle(String.format("[%.0f%%]", finalIndex / nodes.size() * 100));
-//                        }
-//                    });
-//
-//                    if (!imageCompressInProgress) {
-//                        break;
-//                    }
-//
-//                    index++;
-//                }
-//
-//                ApplicationManager.getApplication().invokeLater(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        clearTitle();
-//                        imageCompressInProgress = false;
-//                        getRootPane().setDefaultButton(buttonOK);
-//                        buttonProcess.setEnabled(true);
-//                        buttonOK.setEnabled(true);
-//                        buttonCancel.setText("Cancel");
-//
-//                        long totalBytes = 0;
-//                        long totalSavedBytes = 0;
-//                        for (FileTreeNode node : nodes) {
-//                            totalBytes += node.getVirtualFile().getLength();
-//                            totalSavedBytes += node.getVirtualFile().getLength() - node.getImageBuffer().length;
-//                        }
-//
-//                        float compress = (((float) totalSavedBytes) * 100 / ((float) totalBytes));
-//                        String saved = StringFormatUtil.humanReadableByteCount(totalSavedBytes);
-//                        totalDetails.setText(String.format("Total compress: %.1f%% / Saved: %s", compress, saved));
-//                    }
-//                });
-//
-//            }
-//        });
-    }
-//
-//    private List<FileTreeNode> getCheckedNodes(FileTreeNode root) {
-//        List<FileTreeNode> nodes = new LinkedList<>();
-//        Enumeration enumeration = root.children();
-//        while (enumeration.hasMoreElements()) {
-//            FileTreeNode node = (FileTreeNode) enumeration.nextElement();
-//            if (!node.isLeaf()) {
-//                nodes.addAll(getCheckedNodes(node));
-//                continue;
-//            }
-//
-//            if (node.isChecked()) {
-//                nodes.add(node);
-//            }
-//        }
-//
-//        return nodes;
-//    }
-
-    private void onSave() {
-        buttonOK.setEnabled(false);
-        buttonCancel.setEnabled(false);
-
-        List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) fileTree.getModel().getRoot());
-        ApplicationManager.getApplication().runWriteAction(new Runnable() {
-            @Override
-            public void run() {
-                for (FileTreeNode node : nodes) {
-                    try {
-                        OutputStream stream = node.getVirtualFile().getOutputStream(this);
-                        stream.write(node.getImageBuffer());
-                        stream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                ApplicationManager.getApplication().invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (FileTreeNode node : nodes) {
-                            node.setImageBuffer(null);
-                            ((DefaultTreeModel) fileTree.getModel()).nodeChanged(node);
-                        }
-
-                        buttonCancel.setText("Close");
-                        buttonCancel.setEnabled(true);
-                    }
-                });
-            }
-        });
+    public JTree getTree() {
+        return fileTree;
     }
 
-    private void onCancel() {
-        if (!imageCompressInProgress) {
-            dispose();
-        }
+    public JImage getImageBefore() {
+        return (JImage) imageBefore;
+    }
 
-        imageCompressInProgress = false;
-        buttonCancel.setText("Cancel");
+    public JImage getImageAfter() {
+        return (JImage) imageAfter;
+    }
+
+    public JLabel getDetailsBefore() {
+        return detailsBefore;
+    }
+
+    public JLabel getDetailsAfter() {
+        return detailsAfter;
+    }
+
+    public JLabel getTotalDetails() {
+        return totalDetails;
+    }
+
+    public JButton getButtonSave() {
+        return buttonSave;
+    }
+
+    public JButton getButtonCancel() {
+        return buttonCancel;
+    }
+
+    public JButton getButtonProcess() {
+        return buttonProcess;
+    }
+
+    public void setCompressInProgress(boolean value) {
+        imageCompressInProgress = value;
+    }
+
+    public boolean getCompressInProgress() {
+        return imageCompressInProgress;
+    }
+
+    private void onClose() {
+        dispose();
     }
 
     private void createUIComponents() {
@@ -317,10 +211,7 @@ public class ProcessImage extends JDialog {
         fileTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         TreeUtil.expandAll(fileTree);
 
-        ImageSelectListener imageSelectListener = new ImageSelectListener(this, fileTree);
-        imageSelectListener.setBeforeComponents((JImage) imageBefore, detailsBefore);
-        imageSelectListener.setAfterComponents((JImage) imageAfter, detailsAfter);
-        fileTree.addTreeSelectionListener(imageSelectListener);
+        fileTree.addTreeSelectionListener(new ImageSelectListener(this));
     }
 
     private FileTreeNode buildTree() {

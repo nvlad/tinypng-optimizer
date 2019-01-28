@@ -6,28 +6,26 @@ import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
 import com.nvlad.tinypng.ui.dialogs.ProcessImage;
 import com.nvlad.tinypng.util.StringFormatUtil;
 
-import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
 
 public class ProcessActionListener extends ActionListenerBase {
-    public ProcessActionListener(ProcessImage dialog, JTree tree) {
-        super(dialog, tree);
+    public ProcessActionListener(ProcessImage dialog) {
+        super(dialog);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        myDialog.setTitle("[0%]");
-        imageCompressInProgress = true;
-        buttonProcess.setEnabled(false);
-        buttonCancel.setText("Stop");
-        final List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) myTree.getModel().getRoot());
+        dialog.setTitle("[0%]");
+        dialog.setCompressInProgress(true);
+        dialog.getButtonProcess().setEnabled(false);
+        dialog.getButtonCancel().setText("Stop");
+        final List<FileTreeNode> nodes = getCheckedNodes((FileTreeNode) dialog.getTree().getModel().getRoot());
         for (FileTreeNode node : nodes) {
             node.setImageBuffer(null);
-            ((DefaultTreeModel) myTree.getModel()).nodeChanged(node);
+            ((DefaultTreeModel) dialog.getTree().getModel()).nodeChanged(node);
         }
 
         ApplicationManager.getApplication().executeOnPooledThread(new Runnable() {
@@ -48,12 +46,12 @@ public class ProcessActionListener extends ActionListenerBase {
                     ApplicationManager.getApplication().invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            ((DefaultTreeModel) myTree.getModel()).nodeChanged(node);
+                            ((DefaultTreeModel) dialog.getTree().getModel()).nodeChanged(node);
                             dialog.setTitle(String.format("[%.0f%%]", finalIndex / nodes.size() * 100));
                         }
                     });
 
-                    if (!imageCompressInProgress) {
+                    if (!dialog.getCompressInProgress()) {
                         break;
                     }
 
@@ -63,12 +61,11 @@ public class ProcessActionListener extends ActionListenerBase {
                 ApplicationManager.getApplication().invokeLater(new Runnable() {
                     @Override
                     public void run() {
-                        myDialog.clearTitle();
-                        myDialog.imageCompressInProgress = false;
-                        myDialog.getRootPane().setDefaultButton(buttonOK);
-                        myDialog.buttonProcess.setEnabled(true);
-                        myDialog.buttonOK.setEnabled(true);
-                        myDialog.buttonCancel.setText("Cancel");
+                        dialog.clearTitle();
+                        dialog.setCompressInProgress(false);
+                        dialog.getRootPane().setDefaultButton(dialog.getButtonSave());
+                        dialog.getButtonSave().setEnabled(true);
+                        dialog.getButtonCancel().setText("Cancel");
 
                         long totalBytes = 0;
                         long totalSavedBytes = 0;
@@ -79,12 +76,11 @@ public class ProcessActionListener extends ActionListenerBase {
 
                         float compress = (((float) totalSavedBytes) * 100 / ((float) totalBytes));
                         String saved = StringFormatUtil.humanReadableByteCount(totalSavedBytes);
-                        totalDetails.setText(String.format("Total compress: %.1f%% / Saved: %s", compress, saved));
+                        dialog.getTotalDetails().setText(String.format("Total compress: %.1f%% / Saved: %s", compress, saved));
                     }
                 });
 
             }
         });
-
     }
 }

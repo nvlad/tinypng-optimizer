@@ -3,19 +3,16 @@ package com.nvlad.tinypng.ui.dialogs.listeners;
 import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
 import com.nvlad.tinypng.ui.dialogs.ProcessImage;
 
-import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ActionListenerBase implements ActionListener {
-    final ProcessImage myDialog;
-    final JTree myTree;
+    final ProcessImage dialog;
 
-    public ActionListenerBase(ProcessImage dialog, JTree tree) {
-        myDialog = dialog;
-        myTree = tree;
+    public ActionListenerBase(ProcessImage dialog) {
+        this.dialog = dialog;
     }
 
     List<FileTreeNode> getCheckedNodes(FileTreeNode root) {
