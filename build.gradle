@@ -51,5 +51,6 @@ version '1.0.9'
 patchPluginXml {
     changeNotes """
 - Update "Usage this month" value on Open plugin settings or press Apply
+- Catch TinyPNG service errors.
 """
 }
