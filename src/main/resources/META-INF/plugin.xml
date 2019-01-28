@@ -33,7 +33,6 @@
     <application-components>
         <component>
             <implementation-class>com.nvlad.tinypng.PluginApplicationComponent</implementation-class>
-            <interface-class>com.nvlad.tinypng.PluginApplicationComponent</interface-class>
         </component>
     </application-components>
 </idea-plugin>
