@@ -29,6 +29,9 @@
                 description="Optimize Image size with TinyPNG">
             <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
         </action>
+        <action id="com.nvlad.tinypng.actions.AsText" class="com.nvlad.tinypng.actions.AsText" text="Edit as Text">
+            <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
+        </action>
     </actions>
     <application-components>
         <component>
