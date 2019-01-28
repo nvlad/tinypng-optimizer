@@ -1,9 +1,6 @@
 package com.nvlad.tinypng.actions;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.actionSystem.Presentation;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
@@ -50,7 +47,7 @@ public class Compress extends AnAction {
             Tinify.setKey(settings.apiKey);
         }
 
-        final List<VirtualFile> list = getSupportedFileList(roots);
+        final List<VirtualFile> list = getSupportedFileList(roots, false);
         final ProcessImage dialog = new ProcessImage(project, list, Arrays.asList(roots));
         dialog.setDialogSize(frame);
         dialog.setVisible(true);
@@ -58,14 +55,12 @@ public class Compress extends AnAction {
 
     @Override
     public void update(AnActionEvent e) {
+        final List<VirtualFile> list = getSupportedFileList(PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext()), true);
         final Presentation presentation = e.getPresentation();
-        final List<VirtualFile> list = getSupportedFileList(PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext()));
-        presentation.setIcon(Icons.ACTION);
         presentation.setEnabled(!list.isEmpty());
-        super.update(e);
     }
 
-    private List<VirtualFile> getSupportedFileList(VirtualFile[] files) {
+    private List<VirtualFile> getSupportedFileList(VirtualFile[] files, boolean breakOnFirstFound) {
         List<VirtualFile> result = new LinkedList<>();
         if (files == null) {
             return result;
@@ -73,13 +68,22 @@ public class Compress extends AnAction {
 
         for (VirtualFile file : files) {
             if (file.isDirectory()) {
-                result.addAll(getSupportedFileList(file.getChildren()));
-                continue;
+                result.addAll(getSupportedFileList(file.getChildren(), breakOnFirstFound));
+
+                if (breakOnFirstFound && !result.isEmpty()) {
+                    break;
+                } else {
+                    continue;
+                }
             }
 
             final String extension = file.getExtension();
             if (extension != null && ArrayUtil.contains(extension.toLowerCase(), supportedExtensions)) {
                 result.add(file);
+
+                if (breakOnFirstFound) {
+                    break;
+                }
             }
         }
 
