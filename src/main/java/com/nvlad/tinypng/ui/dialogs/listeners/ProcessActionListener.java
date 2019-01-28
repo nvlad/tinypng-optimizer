@@ -1,10 +1,14 @@
 package com.nvlad.tinypng.ui.dialogs.listeners;
 
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ModalityState;
+import com.intellij.openapi.ui.Messages;
+import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.services.TinyPNG;
 import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
 import com.nvlad.tinypng.ui.dialogs.ProcessImage;
 import com.nvlad.tinypng.util.StringFormatUtil;
+import com.tinify.Exception;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.ActionEvent;
@@ -35,10 +39,22 @@ public class ProcessActionListener extends ActionListenerBase {
                 for (FileTreeNode node : nodes) {
                     try {
                         node.setImageBuffer(TinyPNG.process(node.getVirtualFile()));
-//                } catch (Exception e) {
-//                    System.out.println(e);
-                    } catch (IOException e) {
+                    } catch (Exception tinifyException) {
+                        ApplicationManager.getApplication().invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                dialog.setCompressInProgress(false);
+                                dialog.clearTitle();
+                                dialog.getRootPane().setDefaultButton(dialog.getButtonProcess());
+                                dialog.getButtonProcess().setEnabled(true);
+                                dialog.getButtonSave().setEnabled(false);
+                                dialog.getButtonCancel().setText("Cancel");
+                                Messages.showErrorDialog(tinifyException.getMessage(), Constants.TITLE);
+                            }
+                        }, ModalityState.any());
 
+                        return;
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
 
