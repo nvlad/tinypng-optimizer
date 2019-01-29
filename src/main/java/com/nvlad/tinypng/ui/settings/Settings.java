@@ -5,6 +5,8 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.text.StringUtil;
+import com.intellij.ui.IdeBorderFactory;
+import com.intellij.util.ui.UIUtil;
 import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
 import com.tinify.Exception;
@@ -18,6 +20,14 @@ public class Settings implements Configurable {
     private JPanel mainPanel;
     private JTextField apiKey;
     private JLabel usage;
+    private JPanel apiSettingPanel;
+    private JPanel pluginSettings;
+    private JCheckBox checkSupportedFiles;
+
+    public Settings() {
+        UIUtil.addBorder(apiSettingPanel, IdeBorderFactory.createTitledBorder("API Settings", false));
+        UIUtil.addBorder(pluginSettings, IdeBorderFactory.createTitledBorder("Plugin Settings", false));
+    }
 
     @Nls(capitalization = Nls.Capitalization.Title)
     @Override
@@ -48,6 +58,10 @@ public class Settings implements Configurable {
     @Override
     public boolean isModified() {
         PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
+        if (checkSupportedFiles.isSelected() != settings.checkSupportedFiles) {
+            return true;
+        }
+
         if (StringUtil.isEmptyOrSpaces(settings.apiKey) && StringUtil.isEmptyOrSpaces(apiKey.getText())) {
             return false;
         }
@@ -59,6 +73,7 @@ public class Settings implements Configurable {
     public void apply() {
         PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
         settings.apiKey = apiKey.getText();
+        settings.checkSupportedFiles = checkSupportedFiles.isSelected();
         Tinify.setKey(settings.apiKey);
         if (!StringUtil.isEmptyOrSpaces(settings.apiKey)) {
             updateUsageCount(true);

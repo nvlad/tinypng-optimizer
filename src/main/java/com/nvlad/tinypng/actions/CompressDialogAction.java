@@ -58,6 +58,11 @@ public class CompressDialogAction extends AnAction {
 
     @Override
     public void update(AnActionEvent e) {
+        PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
+        if (!settings.checkSupportedFiles) {
+            return;
+        }
+
         final List<VirtualFile> list = getSupportedFileList(PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext()), true);
         final Presentation presentation = e.getPresentation();
         presentation.setEnabled(!list.isEmpty());

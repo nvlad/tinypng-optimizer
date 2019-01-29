@@ -22,6 +22,7 @@ public class PluginGlobalSettings implements PersistentStateComponent<PluginGlob
     public int dialogSizeWidth;
     public int dialogSizeHeight;
     public int dividerLocation = 200;
+    public boolean checkSupportedFiles = true;
 
     @Nullable
     @Override
