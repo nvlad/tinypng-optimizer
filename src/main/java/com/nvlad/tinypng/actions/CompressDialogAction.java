@@ -92,4 +92,8 @@ public class CompressDialogAction extends AnAction {
 
         return result;
     }
+
+    public boolean isDumbAware() {
+        return true;
+    }
 }
