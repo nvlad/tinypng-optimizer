@@ -29,6 +29,10 @@
                 description="Optimize Image size with TinyPNG">
             <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
         </action>
+        <action id="com.nvlad.tinypng.actions.CompressBackgroundAction"
+                class="com.nvlad.tinypng.actions.CompressBackgroundAction" text="Optimize Image Size in Background">
+            <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
+        </action>
     </actions>
     <application-components>
         <component>
