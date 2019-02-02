@@ -36,9 +36,11 @@ public class ImageSelectListener implements TreeSelectionListener {
             myDialog.clearTitle();
         } else {
             imagePanel.setImage(file);
-            final int width = imagePanel.getImage().getWidth(myDialog);
-            final int height = imagePanel.getImage().getHeight(myDialog);
-            myDialog.setTitle(String.format("- %s [%dx%d]", file.getName(), width, height));
+            if (imagePanel.getImage() != null) {
+                final int width = imagePanel.getImage().getWidth(myDialog);
+                final int height = imagePanel.getImage().getHeight(myDialog);
+                myDialog.setTitle(String.format("- %s [%dx%d]", file.getName(), width, height));
+            }
         }
 
         updateImageDetails(imagePanel, detailsLabel, "Old");
