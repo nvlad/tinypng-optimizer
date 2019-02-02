@@ -2,10 +2,13 @@ package com.nvlad.tinypng.ui.components;
 
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.JBColor;
+import com.intellij.util.ui.UIUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -13,9 +16,38 @@ import java.io.IOException;
 public class JImage extends JPanel {
     private BufferedImage image;
     private int size;
+    private Rectangle myRect;
+    private BufferedImage bgImage;
 
     public JImage() {
         this.setBorder(BorderFactory.createLineBorder(JBColor.border()));
+        this.addComponentListener(new ComponentListener() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if (image != null) {
+                    final Rectangle newRect = getImageRect();
+                    if (myRect != newRect) {
+                        myRect = getImageRect();
+                        bgImage = prepareChessboardBackground();
+                    }
+                }
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentShown(ComponentEvent e) {
+
+            }
+
+            @Override
+            public void componentHidden(ComponentEvent e) {
+
+            }
+        });
     }
 
     public void setImage(VirtualFile file) throws IOException {
@@ -29,6 +61,11 @@ public class JImage extends JPanel {
         } else {
             image = ImageIO.read(new ByteArrayInputStream(buffer));
             size = buffer.length;
+        }
+
+        if (image != null) {
+            myRect = getImageRect();
+            bgImage = prepareChessboardBackground();
         }
 
         repaint();
@@ -46,8 +83,8 @@ public class JImage extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (image != null) {
-            Rectangle rect = getImageRect();
-            g.drawImage(image, rect.x, rect.y, rect.width, rect.height, this);
+            g.drawImage(bgImage, myRect.x, myRect.y, myRect.width, myRect.height, this);
+            g.drawImage(image, myRect.x, myRect.y, myRect.width, myRect.height, this);
         }
     }
 
@@ -92,5 +129,25 @@ public class JImage extends JPanel {
         }
 
         return rect;
+    }
+
+    private BufferedImage prepareChessboardBackground() {
+        final BufferedImage image = UIUtil.createImage(myRect.width, myRect.height, BufferedImage.TYPE_INT_RGB);
+        final Graphics graphics = image.getGraphics();
+        boolean even = true;
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, myRect.width, myRect.height);
+        graphics.setColor(Color.LIGHT_GRAY);
+        for (int x = 0; x < myRect.width; x += 5) {
+            even = ((x / 5) & 1) == 0;
+            for (int y = 0; y < myRect.height; y += 5) {
+                even = !even;
+                if (even) {
+                    graphics.fillRect(x, y, 5, 5);
+                }
+            }
+        }
+
+        return image;
     }
 }
