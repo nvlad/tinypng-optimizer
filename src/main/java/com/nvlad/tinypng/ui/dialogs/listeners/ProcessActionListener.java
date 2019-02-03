@@ -5,6 +5,7 @@ import com.intellij.openapi.application.ModalityState;
 import com.intellij.openapi.ui.Messages;
 import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.services.TinyPNG;
+import com.nvlad.tinypng.services.TinyPNGErrorInfo;
 import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
 import com.nvlad.tinypng.ui.dialogs.ProcessImage;
 import com.nvlad.tinypng.util.StringFormatUtil;
@@ -40,20 +41,25 @@ public class ProcessActionListener extends ActionListenerBase {
                     try {
                         node.setImageBuffer(TinyPNG.process(node.getVirtualFile()));
                     } catch (Exception tinifyException) {
-                        ApplicationManager.getApplication().invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                dialog.setCompressInProgress(false);
-                                dialog.clearTitle();
-                                dialog.getRootPane().setDefaultButton(dialog.getButtonProcess());
-                                dialog.getButtonProcess().setEnabled(true);
-                                dialog.getButtonSave().setEnabled(false);
-                                dialog.getButtonCancel().setText("Cancel");
-                                Messages.showErrorDialog(tinifyException.getMessage(), Constants.TITLE);
-                            }
-                        }, ModalityState.any());
+                        TinyPNGErrorInfo error = TinyPNGErrorInfo.parse(tinifyException.getMessage());
+                        if (error != null && error.code == 415) {
+                            node.setError(error);
+                        } else {
+                            ApplicationManager.getApplication().invokeLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    dialog.setCompressInProgress(false);
+                                    dialog.clearTitle();
+                                    dialog.getRootPane().setDefaultButton(dialog.getButtonProcess());
+                                    dialog.getButtonProcess().setEnabled(true);
+                                    dialog.getButtonSave().setEnabled(false);
+                                    dialog.getButtonCancel().setText("Cancel");
+                                    Messages.showErrorDialog(tinifyException.getMessage(), Constants.TITLE);
+                                }
+                            }, ModalityState.any());
 
-                        return;
+                            return;
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -87,7 +93,9 @@ public class ProcessActionListener extends ActionListenerBase {
                         long totalSavedBytes = 0;
                         for (FileTreeNode node : nodes) {
                             totalBytes += node.getVirtualFile().getLength();
-                            totalSavedBytes += node.getVirtualFile().getLength() - node.getImageBuffer().length;
+                            if (node.getVirtualFile() != null && node.getImageBuffer() != null) {
+                                totalSavedBytes += node.getVirtualFile().getLength() - node.getImageBuffer().length;
+                            }
                         }
 
                         float compress = (((float) totalSavedBytes) * 100 / ((float) totalBytes));

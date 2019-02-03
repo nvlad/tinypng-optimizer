@@ -7,3 +7,4 @@ Waiting for Release
 - Add: Compress images in Background
 - Fix: NPE when choose bad image
 - Add: Transparency chessboard under image
+- Add: Show optimizing errors
