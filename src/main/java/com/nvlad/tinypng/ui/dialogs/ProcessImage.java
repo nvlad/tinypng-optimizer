@@ -32,9 +32,9 @@ public class ProcessImage extends JDialog {
     private JPanel contentPane;
     private JButton buttonSave;
     private JButton buttonCancel;
-    private JPanel imageBefore;
+    private JComponent imageBefore;
     private JLabel detailsBefore;
-    private JPanel imageAfter;
+    private JComponent imageAfter;
     private JLabel detailsAfter;
     private JTree fileTree;
     private JScrollPane scrollPanel;
@@ -43,6 +43,7 @@ public class ProcessImage extends JDialog {
     private JLabel totalDetails;
     private JLabel titleBefore;
     private JLabel titleAfter;
+    private JPanel toolbar;
     private List<VirtualFile> myFiles;
     private List<VirtualFile> myRoots;
     private Project myProject;
@@ -212,6 +213,12 @@ public class ProcessImage extends JDialog {
         TreeUtil.expandAll(fileTree);
 
         fileTree.addTreeSelectionListener(new ImageSelectListener(this));
+
+        configureToolbar();
+    }
+
+    private void configureToolbar() {
+        toolbar = Toolbar.create();
     }
 
     private FileTreeNode buildTree() {
