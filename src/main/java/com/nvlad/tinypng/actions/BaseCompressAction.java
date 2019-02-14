@@ -9,7 +9,6 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ArrayUtil;
 import com.nvlad.tinypng.Constants;
-import com.nvlad.tinypng.Icons;
 import com.nvlad.tinypng.PluginGlobalSettings;
 import com.tinify.Tinify;
 
@@ -18,10 +17,6 @@ import java.util.List;
 
 public abstract class BaseCompressAction extends AnAction {
     private static final String[] supportedExtensions = {"png", "jpg", "jpeg"};
-
-    public BaseCompressAction() {
-        getTemplatePresentation().setIcon(Icons.ACTION);
-    }
 
     @Override
     public void actionPerformed(AnActionEvent e) {

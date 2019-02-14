@@ -24,15 +24,19 @@
     </extensions>
 
     <actions>
-        <!-- Add your actions here -->
-        <action id="com.nvlad.tinypng.optimizer" class="com.nvlad.tinypng.actions.CompressDialogAction" text="Optimize Image Size..."
-                description="Optimize Image size with TinyPNG">
-            <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
-        </action>
-        <action id="com.nvlad.tinypng.actions.CompressBackgroundAction"
-                class="com.nvlad.tinypng.actions.CompressBackgroundAction" text="Optimize Image Size in Background">
-            <add-to-group  group-id="ProjectViewPopupMenuModifyGroup" anchor="last"/>
-        </action>
+        <group id="TinyPNGImageOptimizer" text="TinyPNG Image Optimizer" popup="true" icon="/icons/action.png">
+            <action id="TinyPNGImageOptimizerDialog"
+                    class="com.nvlad.tinypng.actions.CompressDialogAction"
+                    text="Optimize..."
+                    description="Optimize Image size with TinyPNG"/>
+            <action id="TinyPNGImageOptimizerBackground"
+                    class="com.nvlad.tinypng.actions.CompressBackgroundAction"
+                    text="Optimize in Background"
+                    description="Optimize Image size with TinyPNG in Background"/>
+
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </group>
     </actions>
     <application-components>
         <component>
