@@ -1,7 +1,7 @@
 package com.nvlad.tinypng.ui.dialogs.listeners;
 
 import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
-import com.nvlad.tinypng.ui.dialogs.ProcessImage;
+import com.nvlad.tinypng.ui.dialogs.ProcessImageDialog;
 
 import java.awt.event.ActionListener;
 import java.util.Enumeration;
@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public abstract class ActionListenerBase implements ActionListener {
-    final ProcessImage dialog;
+    final ProcessImageDialog dialog;
 
-    public ActionListenerBase(ProcessImage dialog) {
+    public ActionListenerBase(ProcessImageDialog dialog) {
         this.dialog = dialog;
     }
 

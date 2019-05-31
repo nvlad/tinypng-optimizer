@@ -2,7 +2,7 @@ package com.nvlad.tinypng.ui.dialogs.listeners;
 
 import com.intellij.openapi.application.ApplicationManager;
 import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
-import com.nvlad.tinypng.ui.dialogs.ProcessImage;
+import com.nvlad.tinypng.ui.dialogs.ProcessImageDialog;
 
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.event.ActionEvent;
@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 public class SaveActionListener extends ActionListenerBase {
-    public SaveActionListener(ProcessImage dialog) {
+    public SaveActionListener(ProcessImageDialog dialog) {
         super(dialog);
     }
 

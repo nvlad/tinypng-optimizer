@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.WindowManager;
 import com.nvlad.tinypng.services.TinyPNG;
-import com.nvlad.tinypng.ui.dialogs.ProcessImage;
+import com.nvlad.tinypng.ui.dialogs.ProcessImageDialog;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class CompressDialogAction extends BaseCompressAction {
         TinyPNG.setupApiKey(project);
 
         final List<VirtualFile> list = getSupportedFileList(roots, false);
-        final ProcessImage dialog = new ProcessImage(project, list, Arrays.asList(roots));
+        final ProcessImageDialog dialog = new ProcessImageDialog(project, list, Arrays.asList(roots));
         dialog.setDialogSize(frame);
         dialog.setVisible(true);
     }

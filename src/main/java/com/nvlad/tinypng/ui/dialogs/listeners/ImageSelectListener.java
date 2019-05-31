@@ -3,7 +3,7 @@ package com.nvlad.tinypng.ui.dialogs.listeners;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.nvlad.tinypng.ui.components.JImage;
 import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
-import com.nvlad.tinypng.ui.dialogs.ProcessImage;
+import com.nvlad.tinypng.ui.dialogs.ProcessImageDialog;
 import com.nvlad.tinypng.util.StringFormatUtil;
 
 import javax.swing.*;
@@ -12,9 +12,9 @@ import javax.swing.event.TreeSelectionListener;
 import java.io.IOException;
 
 public class ImageSelectListener implements TreeSelectionListener {
-    private final ProcessImage myDialog;
+    private final ProcessImageDialog myDialog;
 
-    public ImageSelectListener(ProcessImage dialog) {
+    public ImageSelectListener(ProcessImageDialog dialog) {
         myDialog = dialog;
     }
 

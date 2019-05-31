@@ -28,7 +28,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ProcessImage extends JDialog {
+public class ProcessImageDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonSave;
     private JButton buttonCancel;
@@ -49,7 +49,7 @@ public class ProcessImage extends JDialog {
     private Project myProject;
     private boolean imageCompressInProgress;
 
-    public ProcessImage(Project project, List<VirtualFile> files, List<VirtualFile> roots) {
+    public ProcessImageDialog(Project project, List<VirtualFile> files, List<VirtualFile> roots) {
         imageCompressInProgress = false;
         myFiles = files;
         myRoots = roots;
@@ -95,12 +95,12 @@ public class ProcessImage extends JDialog {
         this.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                settings.setDialogSize(((ProcessImage) e.getSource()).getSize());
+                settings.setDialogSize(((ProcessImageDialog) e.getSource()).getSize());
             }
 
             @Override
             public void componentMoved(ComponentEvent e) {
-                settings.setDialogLocation(((ProcessImage) e.getSource()).getLocation());
+                settings.setDialogLocation(((ProcessImageDialog) e.getSource()).getLocation());
             }
         });
         splitPanel.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {

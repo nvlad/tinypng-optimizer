@@ -7,7 +7,7 @@ import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.services.TinyPNG;
 import com.nvlad.tinypng.services.TinyPNGErrorInfo;
 import com.nvlad.tinypng.ui.dialogs.FileTreeNode;
-import com.nvlad.tinypng.ui.dialogs.ProcessImage;
+import com.nvlad.tinypng.ui.dialogs.ProcessImageDialog;
 import com.nvlad.tinypng.util.StringFormatUtil;
 import com.tinify.Exception;
 
@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class ProcessActionListener extends ActionListenerBase {
-    public ProcessActionListener(ProcessImage dialog) {
+    public ProcessActionListener(ProcessImageDialog dialog) {
         super(dialog);
     }
 
