@@ -11,7 +11,7 @@ import com.tinify.Tinify;
 import java.io.IOException;
 
 public class TinyPNG {
-    public static void setupApiKey(Project project) {
+    public static boolean setupApiKey(Project project) {
         if (StringUtil.isEmptyOrSpaces(Tinify.key())) {
             PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
             if (StringUtil.isEmptyOrSpaces(settings.apiKey)) {
@@ -19,19 +19,16 @@ public class TinyPNG {
             }
 
             if (StringUtil.isEmptyOrSpaces(settings.apiKey)) {
-                return;
+                return false;
             }
 
             Tinify.setKey(settings.apiKey);
         }
+
+        return true;
     }
 
     public static byte[] process(VirtualFile file) throws IOException {
-        if (StringUtil.isEmptyOrSpaces(Tinify.key())) {
-            PluginGlobalSettings settings = PluginGlobalSettings.getInstance();
-            Tinify.setKey(settings.apiKey);
-        }
-
         return Tinify.fromFile(file.getPath()).toBuffer();
     }
 }

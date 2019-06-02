@@ -23,6 +23,10 @@ public class ProcessActionListener extends ActionListenerBase {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (!TinyPNG.setupApiKey(dialog.getProject())) {
+            return;
+        }
+
         dialog.setTitle("[0%]");
         dialog.setCompressInProgress(true);
         dialog.getButtonProcess().setEnabled(false);

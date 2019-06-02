@@ -23,11 +23,9 @@ public class CompressBackgroundAction extends BaseCompressAction {
             public void run(@NotNull ProgressIndicator indicator) {
                 Project project = e.getProject();
                 final VirtualFile[] roots = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.getDataContext());
-                if (roots == null) {
+                if (roots == null || !TinyPNG.setupApiKey(project)) {
                     return;
                 }
-
-                TinyPNG.setupApiKey(project);
 
                 final List<VirtualFile> list = getSupportedFileList(roots, false);
                 indicator.setText("Optimize Image Size...");

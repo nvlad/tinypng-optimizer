@@ -158,6 +158,10 @@ public class ProcessImageDialog extends JDialog {
         return fileTree;
     }
 
+    public Project getProject() {
+        return myProject;
+    }
+
     public JImage getImageBefore() {
         return (JImage) imageBefore;
     }
