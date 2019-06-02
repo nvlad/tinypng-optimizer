@@ -60,7 +60,6 @@ public abstract class BaseCompressAction extends AnAction {
         for (VirtualFile file : files) {
             if (file.isDirectory()) {
                 result.addAll(getSupportedFileList(file.getChildren(), breakOnFirstFound));
-
                 if (breakOnFirstFound && !result.isEmpty()) {
                     break;
                 } else {
@@ -71,7 +70,6 @@ public abstract class BaseCompressAction extends AnAction {
             final String extension = file.getExtension();
             if (extension != null && ArrayUtil.contains(extension.toLowerCase(), supportedExtensions)) {
                 result.add(file);
-
                 if (breakOnFirstFound) {
                     break;
                 }

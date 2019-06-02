@@ -24,13 +24,15 @@
     </extensions>
 
     <actions>
-        <group id="TinyPNGImageOptimizer" text="TinyPNG Image Optimizer" popup="true" icon="/icons/action.png">
+        <group id="TinyPNGImageOptimizer" text="TinyPNG Image Optimizer" popup="true" icon="/icons/action.png" class="com.nvlad.tinypng.actions.CompressActionGroup">
             <action id="TinyPNGImageOptimizerDialog"
                     class="com.nvlad.tinypng.actions.CompressDialogAction"
-                    text="Optimize..."
+                    icon="/icons/action.png"
+                    text="Optimize Images..."
                     description="Optimize Image size with TinyPNG"/>
             <action id="TinyPNGImageOptimizerBackground"
                     class="com.nvlad.tinypng.actions.CompressBackgroundAction"
+                    icon="/icons/action.png"
                     text="Optimize in Background"
                     description="Optimize Image size with TinyPNG in Background"/>
 
