@@ -12,6 +12,8 @@ import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
 import com.tinify.Tinify;
 
+import java.io.Console;
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,8 +65,6 @@ public abstract class BaseCompressAction extends AnAction {
 
                 if (breakOnFirstFound && !result.isEmpty()) {
                     break;
-                } else {
-                    continue;
                 }
             }
 

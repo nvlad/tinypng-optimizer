@@ -36,6 +36,7 @@ dependencies {
 
 intellij {
     version ideVersion
+    alternativeIdePath runIdePath
     updateSinceUntilBuild false
     plugins = [
             "coverage",
@@ -46,11 +47,15 @@ intellij {
 }
 
 group 'com.nvlad'
-version '1.0.9'
+version '1.1'
 
 patchPluginXml {
     changeNotes """
 - Update "Usage this month" value on Open plugin settings or press Apply
 - Catch TinyPNG service errors.
 """
+}
+
+task buildPluginWithDate(type: org.jetbrains.intellij.tasks.RunIdeTask) {
+    
 }

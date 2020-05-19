@@ -8,11 +8,11 @@ import com.intellij.util.ui.UIUtil;
 import com.intellij.util.ui.tree.TreeUtil;
 import com.nvlad.tinypng.Constants;
 import com.nvlad.tinypng.PluginGlobalSettings;
-import com.nvlad.tinypng.ui.components.JImage;
 import com.nvlad.tinypng.ui.dialogs.listeners.CancelActionListener;
 import com.nvlad.tinypng.ui.dialogs.listeners.ImageSelectListener;
 import com.nvlad.tinypng.ui.dialogs.listeners.ProcessActionListener;
 import com.nvlad.tinypng.ui.dialogs.listeners.SaveActionListener;
+import org.intellij.images.ui.ImageComponent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -158,12 +158,12 @@ public class ProcessImage extends JDialog {
         return fileTree;
     }
 
-    public JImage getImageBefore() {
-        return (JImage) imageBefore;
+    public ImageComponent getImageBefore() {
+        return (ImageComponent) imageBefore;
     }
 
-    public JImage getImageAfter() {
-        return (JImage) imageAfter;
+    public ImageComponent getImageAfter() {
+        return (ImageComponent) imageAfter;
     }
 
     public JLabel getDetailsBefore() {
@@ -205,8 +205,8 @@ public class ProcessImage extends JDialog {
     private void createUIComponents() {
         // TODO: place custom component creation code here
         UIUtil.removeScrollBorder(scrollPanel);
-        imageBefore = new JImage();
-        imageAfter = new JImage();
+        imageBefore = new ImageComponent();
+        imageAfter = new ImageComponent();
         fileTree = new CheckboxTree(new FileCellRenderer(myProject), buildTree());
         fileTree.setRootVisible(false);
         fileTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

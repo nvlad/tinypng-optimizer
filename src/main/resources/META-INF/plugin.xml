@@ -21,6 +21,7 @@
                 id="NVlad.TinyPNG"
                 groupId="tools"
         />
+
     </extensions>
 
     <actions>
@@ -43,4 +44,9 @@
             <implementation-class>com.nvlad.tinypng.PluginApplicationComponent</implementation-class>
         </component>
     </application-components>
+    <project-components>
+        <component>
+            <implementation-class>com.nvlad.tinypng.SelectedQuickViewComponent</implementation-class>
+        </component>
+    </project-components>
 </idea-plugin>
